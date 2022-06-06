@@ -33,8 +33,13 @@
           <td>{{ book.original_publication_year }}</td>
         </tr>
       </tbody>
+ 
+
+    <div class="text-center" v-if="isLoading">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </div>
       <v-pagination
-      v-if="title!=''"
+      v-if="books!=[]"
       class="custom"
       :circle="true"
       v-model="pageNumber"
@@ -43,11 +48,6 @@
       @input="handlePageChange"
     >
     </v-pagination>
-
-    <div class="text-center" v-if="isLoading">
-      <v-progress-circular indeterminate color="primary"></v-progress-circular>
-    </div>
-    <span>{{ pageCount }} {{ pageNumber }}</span>
         
     </template>
     </v-simple-table>
@@ -83,7 +83,7 @@ export default {
   methods: {
     async getBooks(pageNum = null, someTitle = null) {
       this.isLoading = true;
-    
+    this.books = []
       await axios
         .get(
           `https://goodreads.fahadtanwir.repl.co/goodreads?pageNumber=${
